@@ -2,12 +2,16 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductShowController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Pages publiques
+Route::get('/', ProductController::class)->name('products.index');
+Route::get('/products/{product}', ProductShowController::class)->name('products.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -17,6 +21,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Commandes
+    Route::post('/orders/{product}', OrderController::class)->name('orders.store');
+    Route::get('/orders/{order}/payment', [PaymentController::class, 'show'])->name('orders.payment');
 });
 
 // Routes admin
